@@ -2,7 +2,7 @@
 
 A game which tests your reaction and saves some data in a excel sheet
 
-# How to run
+## How to run
 
 1. Download by clicking on green Code Button and select 'Download ZIP'.
 2. Unzip the folder.
