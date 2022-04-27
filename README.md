@@ -1,6 +1,6 @@
 # Click_A_Boo
 
-A game which tests your reaction and saves some data in a excel sheet
+A game which tests your reaction and saves some data in a excel sheet.
 
 ## How to run
 
