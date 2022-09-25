@@ -1,0 +1,13 @@
+amount: 3
+backgroundColor: #1100FF
+circleColor: red
+textColor: white
+minTimeBetween: 0
+maxTimeBetween: 7
+windowWidth: 1400
+windowHeight: 900
+notUsedDistance: 30
+minSize: 120
+maxSize: 60
+removeOnMistake: 0
+repeat: 2
