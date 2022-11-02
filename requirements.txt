@@ -1,7 +1,8 @@
-- Toggle try/real test
+- [x] Toggle try/real test
 - Formel: duration until click * (distance between circle and click + 1) / ([size] * distance of circles)
 - Formel: [log2(2 * distance circle / diameter * circle) / duration until click] Fitts law * 1/(distance between circle and click + 1)
-- circle size alle gleich, durch variable
-- mode löschen mit Remove on click
+- [x] circle size alle gleich, durch variable
+- [x] mode löschen mit Remove on click
 - Apple
 - Packages automatisch installieren
+- Mistake -> distance correct?

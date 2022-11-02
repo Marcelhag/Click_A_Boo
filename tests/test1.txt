@@ -2,12 +2,9 @@ amount: 2
 backgroundColor: #01AB00
 circleColor: red
 textColor: white
-minTimeBetween: 0
-maxTimeBetween: 7
 windowWidth: 1400
 windowHeight: 900
 notUsedDistance: 30
-minSize: 120
-maxSize: 60
-removeOnMistake: 1
+size: 60
 repeat: 1
+evaluate: 1

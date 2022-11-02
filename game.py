@@ -10,14 +10,10 @@ class Game:
         self.backgroundColor: string    = args[1]
         self.circleColor: string        = args[2]
         self.textColor: string          = args[3]
-        self.minTimeBetween: int        = args[4]
-        self.maxTimeBetween: int        = args[5]
-        self.windowWidth: int           = args[6]
-        self.windowHeight: int          = args[7]
-        self.notUsedDistance: int       = math.floor(self.windowWidth/args[8])
-        self.minSize: int               = math.floor(self.windowWidth/args[9])
-        self.maxSize: int               = math.floor(self.windowWidth/args[10])
-        self.removeOnMistake: bool      = args[11]
+        self.windowWidth: int           = args[4]
+        self.windowHeight: int          = args[5]
+        self.notUsedDistance: int       = math.floor(self.windowWidth/args[6])
+        self.size: int               = math.floor(self.windowWidth/args[7])
         self.participant: string        = key
         self.window = None
         self.running = False
@@ -62,10 +58,10 @@ class Game:
 
     def createCirc(self):
         self.timeSinceLastCorrect = time.time()
-        randTime = max(random.random() * self.maxTimeBetween, self.minTimeBetween)
-        self.waitingTime = randTime
-        time.sleep(randTime)
-        size = random.randint(self.minSize, self.maxSize)
+        # randTime = max(random.random() * self.maxTimeBetween, self.minTimeBetween)
+        # self.waitingTime = randTime
+        # time.sleep(randTime)
+        size = self.size
         x = random.randint(size, self.window.width-size)
         y = random.randint(size + self.notUsedDistance, self.window.height-size)
         circEnt = CircleEntity(x, y, size, self)
@@ -89,7 +85,7 @@ class Game:
         else:
             mistake = Mistake(distance, distance + self.circles[-1].size, curTime - self.timeSinceLastClick - self.waitingTime)
             self.circles[-1].mistake.append(mistake)
-            return self.removeOnMistake
+            return True
 
 class Mistake:
     def __init__(self, distance, size, duration):

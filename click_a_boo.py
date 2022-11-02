@@ -2,11 +2,11 @@
 import sys
 import subprocess
 import os
-import pandas as pd
 subprocess.check_call([sys.executable, '-m', 'pip', 'install',
 'pandas'])
 subprocess.check_call([sys.executable, '-m', 'pip', 'install',
 'openpyxl'])
+import pandas as pd
 from graphics import *
 from game import Game
 
@@ -34,29 +34,22 @@ def getGamesArgs():
         backgroundColor = path_data[1][1]
         circleColor = path_data[2][1]
         textColor = path_data[3][1]
-        minTimeBetween = int(path_data[4][1])
-        maxTimeBetween = int(path_data[5][1])
-        windowWidth = int(path_data[6][1])
-        windowHeight = int(path_data[7][1])
-        notUsedDistance = int(path_data[8][1])
-        minSize = int(path_data[9][1])
-        maxSize = int(path_data[10][1])
-        removeOnMistake = True if int(path_data[11][1]) else False
-        repeat = int(path_data[12][1])
+        windowWidth = int(path_data[4][1])
+        windowHeight = int(path_data[5][1])
+        notUsedDistance = int(path_data[6][1])
+        size = int(path_data[7][1])
+        repeat = int(path_data[8][1])
+        evaluate = int(path_data[9][1])
         gameArgs.append(amount)
         gameArgs.append(backgroundColor)
         gameArgs.append(circleColor)
         gameArgs.append(textColor)
-        gameArgs.append(minTimeBetween)
-        gameArgs.append(maxTimeBetween)
         gameArgs.append(windowWidth)
         gameArgs.append(windowHeight)
         gameArgs.append(notUsedDistance)
-        gameArgs.append(minSize)
-        gameArgs.append(maxSize)
-        gameArgs.append(removeOnMistake)
-        gamesArgs.append((gameArgs, repeat, filename))
-        print(filename, removeOnMistake)
+        gameArgs.append(size)
+        gamesArgs.append((gameArgs, repeat, filename, evaluate))
+        print(filename)
     print(gamesArgs)
     return (gamesArgs)
         
@@ -64,7 +57,7 @@ def main():
     clearConsole()
     key = generateKey()
     gameArgs = getGamesArgs()
-    window = GraphWin("Click-A-Boo", width=gameArgs[0][0][6], height=gameArgs[0][0][7])
+    window = GraphWin("Click-A-Boo", width=gameArgs[0][0][4], height=gameArgs[0][0][5])
     first = True
     for args in gameArgs:
         data = []
@@ -72,12 +65,13 @@ def main():
         for i in range(args[1]):
             data = G.startGame(window, args[2][:-4], i, first)
             first = False
-        df = pd.DataFrame(data, columns=['size', 'mistakes', 'duration'], dtype=float)
-        if not os.path.exists('results\\' + G.participant):
-            os.makedirs('results\\' + G.participant)
-        with pd.ExcelWriter('results\\' + G.participant + '\\' + G.participant + '_' + args[2] + '.xlsx') as writer:  
-            df.to_excel(writer, sheet_name='Values')
-            df.describe().to_excel(writer, sheet_name='Statistics')
+        if args[3] > 0:
+            df = pd.DataFrame(data, columns=['size', 'mistakes', 'duration'], dtype=float)
+            if not os.path.exists('results\\' + G.participant):
+                os.makedirs('results\\' + G.participant)
+            with pd.ExcelWriter('results\\' + G.participant + '\\' + G.participant + '_' + args[2] + '.xlsx') as writer:  
+                df.to_excel(writer, sheet_name='Values')
+                df.describe().to_excel(writer, sheet_name='Statistics')
     window.close()
 
 
