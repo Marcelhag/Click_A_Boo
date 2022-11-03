@@ -66,7 +66,8 @@ def main():
             data = G.startGame(window, args[2][:-4], i, first)
             first = False
         if args[3] > 0:
-            df = pd.DataFrame(data, columns=['size', 'mistakes', 'duration'], dtype=float)
+            # df = pd.DataFrame(data, columns=['size', 'mistakes', 'duration'], dtype=float)
+            df = pd.DataFrame(data, columns=['isMistake', 'size', 'distanceToLastCircle', 'distanceToLastClick', 'distanceClickToCenter', 'distanceClickToCircle', 'duration', 'id', 'ip','ipIfNoMistake'], dtype=float)
             if not os.path.exists('results\\' + G.participant):
                 os.makedirs('results\\' + G.participant)
             with pd.ExcelWriter('results\\' + G.participant + '\\' + G.participant + '_' + args[2] + '.xlsx') as writer:  
