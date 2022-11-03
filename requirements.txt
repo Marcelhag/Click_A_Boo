@@ -6,3 +6,10 @@
 - Apple
 - Packages automatisch installieren
 - Mistake -> distance correct?
+
+
+
+- Kreise am Rand
+- Map für Distance über diagonale (1-2) oder (1-10)
+- statistics isMistake
+- Runden auf 2 Nachkommastellen

@@ -12,8 +12,8 @@ class Game:
         self.textColor: string          = args[3]
         self.windowWidth: int           = args[4]
         self.windowHeight: int          = args[5]
-        self.notUsedDistance: int       = math.floor(self.windowWidth/args[6])
-        self.size: int               = math.floor(self.windowWidth/args[7])
+        self.notUsedDistance: int       = args[6]
+        self.size: int                  = args[7]
         self.participant: string        = key
         self.window = None
         self.running = False
@@ -55,20 +55,13 @@ class Game:
             data = [entry.isMistake, entry.size, entry.distanceToLastCircle, entry.distanceToLastClick, entry.distanceClickToCenter, entry.distanceClickToCircle, entry.duration,
               entry.id, entry.ip, entry.ipIfNoMistake]
             self.data.append(data)
-        # for circle in self.circles:
-        #     data = [circle.size, len(circle.mistake), circle.duration]
-        #     self.data.append(data)
-        # self.results = pd.DataFrame(self.data, columns=['size', 'mistakes', 'duration'], dtype=float)
         return self.data
 
     def createCirc(self):
-        # randTime = max(random.random() * self.maxTimeBetween, self.minTimeBetween)
-        # self.waitingTime = randTime
-        # time.sleep(randTime)
         size = self.size
         x = self.lastClick.x
         y = self.lastClick.y
-        while self.calculateDistance(x, y, self.lastClick.x, self.lastClick.y) < self.size:
+        while self.calculateDistance(x, y, self.lastClick.x, self.lastClick.y) < self.size*2:
             x = random.randint(size, self.window.width-size)
             y = random.randint(size + self.notUsedDistance, self.window.height-size)
         circEnt = CircleEntity(x, y, size, self)
@@ -96,12 +89,6 @@ class Game:
         self.lastClick = pos
         self.timeSinceLastClick = curTime
         return True
-        # if distance <= self.circles[-1].size:
-        #     return True
-        # else:
-        #     mistake = Mistake(distance - self.circles[-1].size, self.circles[-1].size, curTime - self.timeSinceLastClick - self.waitingTime)
-        #     self.circles[-1].mistake.append(mistake)
-        #     return True
     
     def calculateDistance(self, x1, y1, x2, y2):
         deltaX = abs(x2 - x1)
@@ -148,6 +135,6 @@ class Entry:
         self.isMistake = True if self.distanceClickToCircle > 0 else False
         self.duration = duration
         self.clickPosition = clickPosition
-        self.id = math.log2(2 * self.distanceToLastClick / self.size) if self.size != 0 and self.distanceToLastClick != 0 else 0
+        self.id = math.log2(4 * self.distanceToLastClick / self.size) if self.size != 0 and self.distanceToLastClick != 0 else 0
         self.ip = self.id / (self.duration * (self.distanceClickToCircle +1)) if self.duration != 0 else 0
         self.ipIfNoMistake = None if self.isMistake else self.ip

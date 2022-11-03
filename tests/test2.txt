@@ -5,6 +5,6 @@ textColor: white
 windowWidth: 1400
 windowHeight: 900
 notUsedDistance: 30
-size: 60
-repeat: 1
-evaluate: 0
+size: 23
+repeat: 2
+evaluate: 1
