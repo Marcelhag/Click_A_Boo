@@ -26,7 +26,6 @@ def generateKey():
 def getGamesArgs():
     gamesArgs = list()
     path= '.\\tests'
-    print("Files and directories in a specified path:")
     for filename in os.listdir(path):
         gameArgs = list()
         path_data = [i.strip().split() for i in open(path + '\\' + filename).readlines()]
@@ -49,8 +48,6 @@ def getGamesArgs():
         gameArgs.append(notUsedDistance)
         gameArgs.append(size)
         gamesArgs.append((gameArgs, repeat, filename, evaluate))
-        print(filename)
-    print(gamesArgs)
     return (gamesArgs)
         
 def main():
@@ -68,11 +65,12 @@ def main():
         if args[3] > 0:
             # df = pd.DataFrame(data, columns=['size', 'mistakes', 'duration'], dtype=float)
             df = pd.DataFrame(data, columns=['isMistake', 'size', 'distanceToLastCircle', 'distanceToLastClick', 'distanceClickToCenter', 'distanceClickToCircle', 'duration', 'id', 'ip','ipIfNoMistake'], dtype=float)
+            df = df.round(2)
             if not os.path.exists('results\\' + G.participant):
                 os.makedirs('results\\' + G.participant)
             with pd.ExcelWriter('results\\' + G.participant + '\\' + G.participant + '_' + args[2] + '.xlsx') as writer:  
                 df.to_excel(writer, sheet_name='Values')
-                df.describe().to_excel(writer, sheet_name='Statistics')
+                df.describe().round(2).to_excel(writer, sheet_name='Statistics')
     window.close()
 
 

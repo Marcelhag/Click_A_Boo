@@ -40,6 +40,18 @@ class Game:
         t.draw(self.window)
         self.window.getMouse()
         t.undraw()
+
+        # Counter
+        for i in range(3):
+            if i != 2:
+                t = Text(Point(self.window.width/2,self.window.height/2), "Test starts in \n" + str(3-i) + ' seconds.')
+            else:
+                t = Text(Point(self.window.width/2,self.window.height/2), "Test starts in \n" + str(3-i) + ' second.')
+            t.setFill(self.textColor)
+            t.draw(self.window)
+            time.sleep(1)
+            t.undraw()
+
         self.window.setBackground('#000000')
         self.startTime = time.time()
         self.timeSinceLastClick = self.startTime
@@ -48,9 +60,7 @@ class Game:
             self.circles[-1].draw()
             while not self.checkMousePos():
                 self.window.checkKey
-                print(self.window.lastKey)
             self.circles[-1].delete()
-        print(self.entries)
         for entry in self.entries:
             data = [entry.isMistake, entry.size, entry.distanceToLastCircle, entry.distanceToLastClick, entry.distanceClickToCenter, entry.distanceClickToCircle, entry.duration,
               entry.id, entry.ip, entry.ipIfNoMistake]
@@ -62,8 +72,8 @@ class Game:
         x = self.lastClick.x
         y = self.lastClick.y
         while self.calculateDistance(x, y, self.lastClick.x, self.lastClick.y) < self.size*2:
-            x = random.randint(size, self.window.width-size)
-            y = random.randint(size + self.notUsedDistance, self.window.height-size)
+            x = random.randint(size + self.notUsedDistance, self.window.width - size - self.notUsedDistance)
+            y = random.randint(size + self.notUsedDistance, self.window.height - size - self.notUsedDistance)
         circEnt = CircleEntity(x, y, size, self)
         self.circles.append(circEnt)
 
@@ -84,7 +94,7 @@ class Game:
         else:
             distanceToLastCircle = self.calculateDistance(math.floor(self.windowWidth/2), math.floor(self.windowHeight/2), self.circles[-1].x, self.circles[-1].y)
             distanceToLastClick = distanceToLastCircle
-        entry = Entry(self.circles[-1], distanceToLastCircle, distanceToLastClick, distanceClickToCenter, duration, pos)
+        entry = Entry(self.circles[-1], distanceToLastCircle, distanceToLastClick, distanceClickToCenter, duration, pos, self)
         self.entries.append(entry)
         self.lastClick = pos
         self.timeSinceLastClick = curTime
@@ -125,16 +135,23 @@ class CircleEntity (Entity):
         self.circ.undraw()
 
 class Entry:
-    def __init__(self, circle: CircleEntity, distanceToLastCircle, distanceToLastClick, distanceClickToCenter, duration, clickPosition):
+    def __init__(self, circle: CircleEntity, distanceToLastCircle, distanceToLastClick, distanceClickToCenter, duration, clickPosition, game: Game):
         self.circle: CircleEntity = circle
         self.distanceToLastCircle = distanceToLastCircle
         self.distanceToLastClick = distanceToLastClick
         self.distanceClickToCenter = distanceClickToCenter
         self.size = circle.size
         self.distanceClickToCircle = max(self.distanceClickToCenter - self.size, 0)
-        self.isMistake = True if self.distanceClickToCircle > 0 else False
+        self.isMistake = 1 if self.distanceClickToCircle > 0 else None
         self.duration = duration
         self.clickPosition = clickPosition
         self.id = math.log2(4 * self.distanceToLastClick / self.size) if self.size != 0 and self.distanceToLastClick != 0 else 0
-        self.ip = self.id / (self.duration * (self.distanceClickToCircle +1)) if self.duration != 0 else 0
+        self.ip = self.id / (self.duration * (self.mapDistance(self.distanceClickToCircle, 0, game)+1)) if self.duration != 0 else 0
         self.ipIfNoMistake = None if self.isMistake else self.ip
+
+    def mapDistance(self, distance, value, game: Game):
+        if value == 0:
+            return distance
+        else:
+            maxDistance = game.calculateDistance(0, 0, game.windowWidth - game.notUsedDistance, game.windowHeight - game.notUsedDistance)
+            return (distance / maxDistance) * value
